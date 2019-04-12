@@ -1,0 +1,2 @@
+# flutter_lifecycle_state
+参照Android端的Activity中的生命周期，在flutter中的State类中也实现了类似方法。
