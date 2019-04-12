@@ -2,6 +2,8 @@
 
 Make State support lifecycle method just like Android&#x27;s Activity#onCreate、 Activity#onResume、Activity#onPause、Activity#onDestroy.
 
+参照Android端的Activity中的生命周期，在flutter中的State类中也实现了类似方法。
+
 ## Getting Started
 
 This project is a starting point for a Dart
