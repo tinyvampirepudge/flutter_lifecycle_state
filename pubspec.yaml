@@ -1,8 +1,8 @@
 name: flutter_lifecycle_state
 description: Make State support lifecycle method just like Android&#x27;s Activity#onCreate、 Activity#onResume、Activity#onPause、Activity#onDestroy.
 version: 0.0.1
-author:
-homepage:
+author: tinytongtong<tinyvampire1102@gmail.com>
+homepage: https://blog.csdn.net/qq_26287435
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
