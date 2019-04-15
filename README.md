@@ -36,3 +36,7 @@ return MaterialApp(
   }
 ```
 
+### 3、demo地址
+
+[https://github.com/tinyvampirepudge/flutter_lifecycle_state_test](https://github.com/tinyvampirepudge/flutter_lifecycle_state_test)
+
