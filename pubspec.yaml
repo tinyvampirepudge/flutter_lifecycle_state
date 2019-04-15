@@ -1,6 +1,6 @@
 name: flutter_lifecycle_state
-description: Make State support lifecycle method just like Android&#x27;s Activity#onCreate、 Activity#onResume、Activity#onPause、Activity#onDestroy.
-version: 0.0.1
+description: 修复StateWithLifecycle子类获取到的widget指向错误的问题。
+version: 0.0.2
 author: tinytongtong<tinyvampire1102@gmail.com>
 homepage: https://blog.csdn.net/qq_26287435
 

@@ -1,12 +1,13 @@
-library flutter_lifecycle_state;
-
 import 'package:flutter/material.dart';
 
 // Register the RouteObserver as a navigation observer.
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 abstract class StateWithLifecycle<T extends StatefulWidget> extends State with WidgetsBindingObserver, RouteAware {
-  String state_with_lifecycle_tag = 'lifecycleTag';
+  String tagInStateWithLifecycle = 'StateWithLifecycle';
+
+  // 参照State中写法，防止子类获取不到正确的widget。
+  T get widget => super.widget;
 
   bool _isVisibleToUser = false; // 是否对用户可见，表明在onResume-onPause调用过程中。也用来表示当前页面是否在栈顶。
 
@@ -21,7 +22,7 @@ abstract class StateWithLifecycle<T extends StatefulWidget> extends State with W
   @override
   void initState() {
     super.initState();
-//    debugPrint('${state_with_lifecycle_tag} --> initState');
+//    debugPrint('$tagInStateWithLifecycle --> initState');
     _onMockCreate();
     _onMockResume();
     WidgetsBinding.instance.addObserver(this);
@@ -29,7 +30,7 @@ abstract class StateWithLifecycle<T extends StatefulWidget> extends State with W
 
   @override
   void deactivate() {
-//    debugPrint('${state_with_lifecycle_tag} --> deactivate');
+//    debugPrint('$tagInStateWithLifecycle --> deactivate');
     super.deactivate();
     if (_didPop || _didPush) {
       _onMockPause();
@@ -48,7 +49,7 @@ abstract class StateWithLifecycle<T extends StatefulWidget> extends State with W
 
   @override
   void dispose() {
-//    debugPrint('${state_with_lifecycle_tag} --> dispose');
+//    debugPrint('$tagInStateWithLifecycle --> dispose');
     _onMockDestroy();
     WidgetsBinding.instance.removeObserver(this);
     routeObserver.unsubscribe(this);
@@ -58,25 +59,21 @@ abstract class StateWithLifecycle<T extends StatefulWidget> extends State with W
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
-    // 告知宿主app，当前页面执行了resumed的生命周期方法。这个方法跟android原生的onResume方法不太一样，在页面第一次创建的时候不会调用。
       case AppLifecycleState.resumed:
-//        debugPrint('${state_with_lifecycle_tag} --> AppLifecycleState.resumed');
+//        debugPrint('$tagInStateWithLifecycle --> AppLifecycleState.resumed');
         _onMockResume();
         _systemDispatched = false;
         break;
       case AppLifecycleState.inactive:
-//        debugPrint('${state_with_lifecycle_tag} --> AppLifecycleState.inactive');
         break;
       case AppLifecycleState.paused:
-//        debugPrint('${state_with_lifecycle_tag} --> AppLifecycleState.paused');
+//        debugPrint('$tagInStateWithLifecycle --> AppLifecycleState.paused');
         _systemDispatched = true;
         _onMockPause();
         break;
       case AppLifecycleState.suspending:
-//        debugPrint('${state_with_lifecycle_tag} --> AppLifecycleState.suspending');
         break;
       default:
-//        debugPrint('${state_with_lifecycle_tag} --> AppLifecycleState.default');
         break;
     }
   }
@@ -90,26 +87,26 @@ abstract class StateWithLifecycle<T extends StatefulWidget> extends State with W
   @override
   void didPush() {
     // Route was pushed onto navigator and is now topmost route.
-//    debugPrint('$state_with_lifecycle_tag:didPush');
+//    debugPrint('$tagInStateWithLifecycle:didPush');
     _didPush = true;
   }
 
   @override
   void didPopNext() {
     // Covering route was popped off the navigator.
-//    debugPrint('$state_with_lifecycle_tag:didPopNext');
+//    debugPrint('$tagInStateWithLifecycle:didPopNext');
     _didPopNext = true;
   }
 
   @override
   void didPop() {
-//    debugPrint('$state_with_lifecycle_tag:didPop');
+//    debugPrint('$tagInStateWithLifecycle:didPop');
     _didPop = true;
   }
 
   /// 页面初始化调用，只会调用一次。参照Android端Activity#onCreate方法。
   void _onMockCreate() {
-    debugPrint("$state_with_lifecycle_tag:onMockCreate");
+//    debugPrint("$tagInStateWithLifecycle:onMockCreate");
     onCreate();
   }
 
@@ -119,7 +116,7 @@ abstract class StateWithLifecycle<T extends StatefulWidget> extends State with W
     // 满足这两个条件时才会执行：_systemDispatched和_isVisibleToUser均为true，_systemDispatched和_isVisibleToUser均为false。
     if (_systemDispatched && _isVisibleToUser || !_systemDispatched && !_isVisibleToUser) {
       _isVisibleToUser = true;
-      debugPrint("$state_with_lifecycle_tag:onMockResume _isVisiableToUser:$_isVisibleToUser");
+//      debugPrint("$tagInStateWithLifecycle:onMockResume _isVisiableToUser:$_isVisibleToUser");
       onResume();
     }
   }
@@ -134,26 +131,34 @@ abstract class StateWithLifecycle<T extends StatefulWidget> extends State with W
     if (!_systemDispatched) {
       _isVisibleToUser = false;
     }
-    debugPrint("$state_with_lifecycle_tag:onMockPause _isVisiableToUser:$_isVisibleToUser");
+//    debugPrint("$tagInStateWithLifecycle:onMockPause _isVisiableToUser:$_isVisibleToUser");
     onPause();
   }
 
   /// 页面销毁时调用。
   /// 这里需要说明的时，不管是纯flutter应用还是混合开发的应用，在根flutter页面返回时，都不会调用它的dispose方法。这就需要我们自己
   void _onMockDestroy() {
-    debugPrint("$state_with_lifecycle_tag:onMockDestroy");
+//    debugPrint("$tagInStateWithLifecycle:onMockDestroy");
     onDestroy();
   }
 
   /// 用于让子类去实现的初始化方法
-  void onCreate() {}
+  void onCreate() {
+    debugPrint('$tagInStateWithLifecycle --> onCreate()');
+  }
 
   /// 用于让子类去实现的不可见变为可见时的方法
-  void onResume() {}
+  void onResume() {
+    debugPrint('$tagInStateWithLifecycle --> onResume()');
+  }
 
   /// 用于让子类去实现的可见变为不可见时调用的方法。
-  void onPause() {}
+  void onPause() {
+    debugPrint('$tagInStateWithLifecycle --> onPause()');
+  }
 
   /// 用于让子类去实现的销毁方法。
-  void onDestroy() {}
+  void onDestroy() {
+    debugPrint('$tagInStateWithLifecycle --> onDestroy()');
+  }
 }
