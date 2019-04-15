@@ -1,6 +1,6 @@
 name: flutter_lifecycle_state
-description: 修复StateWithLifecycle子类获取到的widget指向错误的问题。
-version: 0.0.2
+description: 修复v0.0.2的bug
+version: 0.0.3
 author: tinytongtong<tinyvampire1102@gmail.com>
 homepage: https://blog.csdn.net/qq_26287435
 

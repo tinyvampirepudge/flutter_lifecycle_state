@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 // Register the RouteObserver as a navigation observer.
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
-abstract class StateWithLifecycle<T extends StatefulWidget> extends State with WidgetsBindingObserver, RouteAware {
+abstract class StateWithLifecycle<T extends StatefulWidget> extends State
+    with WidgetsBindingObserver, RouteAware {
   String tagInStateWithLifecycle = 'StateWithLifecycle';
 
   // 参照State中写法，防止子类获取不到正确的widget。
   T get widget => super.widget;
 
-  bool _isVisibleToUser = false; // 是否对用户可见，表明在onResume-onPause调用过程中。也用来表示当前页面是否在栈顶。
+  // 是否对用户可见，表明在onResume-onPause调用过程中。也用来表示当前页面是否在栈顶。
+  bool _isVisibleToUser = false;
 
   // onResume、onPause方法事件是否是由系统触发的。也就是AppLifecycleState.resumed和AppLifecycleState.paused中触发。
   // 在从paused到resumed这个过程中，_systemDispatched的值为true。
@@ -114,7 +116,8 @@ abstract class StateWithLifecycle<T extends StatefulWidget> extends State with W
   @mustCallSuper
   void _onMockResume() {
     // 满足这两个条件时才会执行：_systemDispatched和_isVisibleToUser均为true，_systemDispatched和_isVisibleToUser均为false。
-    if (_systemDispatched && _isVisibleToUser || !_systemDispatched && !_isVisibleToUser) {
+    if (_systemDispatched && _isVisibleToUser ||
+        !_systemDispatched && !_isVisibleToUser) {
       _isVisibleToUser = true;
 //      debugPrint("$tagInStateWithLifecycle:onMockResume _isVisiableToUser:$_isVisibleToUser");
       onResume();
