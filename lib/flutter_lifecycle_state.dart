@@ -73,7 +73,7 @@ abstract class StateWithLifecycle<T extends StatefulWidget> extends State
         _systemDispatched = true;
         _onMockPause();
         break;
-      case AppLifecycleState.suspending:
+      case AppLifecycleState.detached:
         break;
       default:
         break;
